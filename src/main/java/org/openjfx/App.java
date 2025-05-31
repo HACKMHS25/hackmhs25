@@ -1,5 +1,7 @@
 package org.openjfx;
 
+import java.awt.Button;
+
 import atlantafx.base.controls.Card;
 import atlantafx.base.controls.RingProgressIndicator;
 import atlantafx.base.theme.Dracula;
@@ -26,41 +28,42 @@ public class App extends Application {
         Application.setUserAgentStylesheet(new Dracula().getUserAgentStylesheet());
         var pane = new BorderPane();
         var scene = new Scene(pane, 640, 480);
-        var tabs = new TabPane(new Tab("Dashboard"), new Tab("Connect"), new Tab("Finance"));
-
-        // TODO: fix center logic
-        var centerTop = new Group();
-        var centerBot = new Group();
-        var centerVbox = new VBox(
-                centerTop,
-                centerBot);
+        var tabs = new TabPane();
+        var dashboardTab = new Tab("Dashboard");
+        var connectTab = new Tab("Dashboard");
+        var financeTab = new Tab("Dashboard");
 
         var bottomRightPane = new StackPane();
         var indicator = new RingProgressIndicator(0.25, false);
         var card = new Card();
-        bottomRightPane.setPrefHeight(800);
+        var centerCard = new Card();
+        var centerContainer = new VBox(centerCard);
+        var centerContentVbox = new VBox(indicator);
+
+        tabs.getTabs().setAll(dashboardTab, connectTab, financeTab);
+        bottomRightPane.setPrefHeight(700);
         StackPane.setAlignment(indicator, Pos.TOP_RIGHT);
         StackPane.setAlignment(card, Pos.BOTTOM_RIGHT);
         // card.setBody(node);
-        card.setMinSize(300, 800);
-        card.setMaxSize(300, 800);
+        card.setMinSize(300, 700);
+        card.setMaxSize(300, 700);
+        // card.visibleProperty().set(false);
+        centerContentVbox.setAlignment(Pos.CENTER);
 
-        indicator.setMinSize(150, 150);
+        indicator.setMinSize(300, 300);
         indicator.autosize();
-        centerTop.getChildren().add(indicator);
         bottomRightPane.getChildren().add(card);
+        centerCard.setBody(centerContentVbox);
+        centerContainer.setAlignment(Pos.CENTER);
 
         tabs.getStyleClass().add(Styles.TABS_CLASSIC);
         tabs.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
         pane.setTop(tabs);
-        pane.setCenter(centerVbox);
+        pane.setCenter(centerContainer);
         pane.setBottom(bottomRightPane);
-
         stage.setScene(scene);
-
         stage.show();
-
     }
 
     public static void main(String[] args) {
